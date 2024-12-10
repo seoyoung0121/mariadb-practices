@@ -25,7 +25,7 @@ select count(*) as "여자"
 from employees
 where gender = 'F';
 
-select gender, count(*)
+select if(gender = 'M', '남자', '여자') as '성별', count(*)
 from employees
 group by  gender;
 
