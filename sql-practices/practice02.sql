@@ -9,7 +9,7 @@ from salaries;
 -- 문제2.
 -- 마지막으로 신입사원이 들어온 날은 언제 입니까? 다음 형식으로 출력하세요
 -- 예) 2014년 07월 10일
-select date_format(max(hire_date), '%Y년 %m월 %d일')
+select date_format(max(hire_date), '%Y년 %m월 %d일') as "마지막으로 신입사원이 들어온 날"
 from employees;
 
 -- 문제3.
@@ -32,6 +32,6 @@ where to_date='9999-01-01';
 
 -- 문제6.
 -- 현재, 근무중인 사원 중 나이가 제일 어린 사원과 제일 많은 사원의 나이를 각각 출력하세요.
-select period_diff(date_format(max(birth_date), '%y%m'), date_format(curdate(), '%y%m'))/12 as '맏이',
-       period_diff(date_format(min(birth_date), '%y%m'), date_format(curdate(), '%y%m'))/12 as '막내'
+select date_format(curdate(), '%Y') - date_format(max(birth_date), '%Y')as '막내',
+       date_format(curdate(), '%Y') - date_format(min(birth_date), '%Y') as '맏이'
 from employees;
