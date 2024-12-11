@@ -25,7 +25,7 @@ order by b.salary desc;
 
 -- 문제3.
 -- 현재, 사원 자신들의 부서의 평균 급여보다 급여가 많은 사원들의 사번, 이름 그리고 급여를 조회하세요
-select a.emp_no, b.salary
+select a.emp_no, a.first_name, b.salary
 from employees a, salaries b, (select a.dept_no, avg(b.salary) as avg_salary
                                from dept_emp a, salaries b
                                where a.emp_no = b.emp_no

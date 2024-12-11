@@ -5,7 +5,7 @@
 select a.emp_no, a.first_name, b.salary
 from employees a, salaries b
 where b.to_date = '9999-01-01' and a.emp_no = b.emp_no
-order by b.salary;
+order by b.salary desc;
 
 -- 문제2.
 -- 전체 사원의 사번, 이름, 현재 직책을 이름 순서로 출력하세요.
@@ -38,10 +38,10 @@ where a.emp_no = b.emp_no and b.title = 'Technique Leader' and b.to_date != '999
 
 -- 문제6.
 -- 직원 이름(last_name) 중에서 S로 시작하는 직원들의 이름, 부서명, 직책을 조회하세요.
-select a.first_name, d.dept_name, c.title
+select concat(a.first_name, ' ', a.last_name), d.dept_name, c.title
 from employees a, dept_emp b, titles c, departments d
 where a.emp_no = b.emp_no and b.emp_no = c.emp_no and b.dept_no = d.dept_no
-  and a.first_name like 'S%';
+  and a.last_name like 'S%';
 
 -- 문제7.
 -- 현재, 직책이 Engineer인 사원 중에서 현재 급여가 40,000 이상인 사원들의 사번, 이름, 급여 그리고 타이틀을 급여가 큰 순서대로 출력하세요.
@@ -51,7 +51,7 @@ where a.emp_no = b.emp_no and b.emp_no = c.emp_no
   and b.to_date = '9999-01-01' and c.to_date = '9999-01-01'
   and c.title = 'Engineer'
   and b.salary >= 40000
-order by b.salary;
+order by b.salary desc;
 
 -- 문제8.
 -- 현재, 평균급여가 50,000이 넘는 직책을 직책과 평균급여을 평균급여가 큰 순서대로 출력하세요.
@@ -59,8 +59,8 @@ select a.title, avg(b.salary) as avg_salary
 from titles a, salaries b
 where a.emp_no = b.emp_no and a.to_date = '9999-01-01' and b.to_date = '9999-01-01'
 group by a.title
-having avg_salary >= 50000
-order by  avg_salary;
+having avg_salary > 50000
+order by  avg_salary desc;
 
 -- 문제9.
 -- 현재, 부서별 평균급여을 평균급여가 큰 순서대로 부서명과 평균연봉을 출력 하세요.
@@ -69,7 +69,7 @@ from departments a, salaries b, dept_emp c
 where a.dept_no = c.dept_no and b.emp_no = c.emp_no
 and b.to_date = '9999-01-01' and c.to_date = '9999-01-01'
 group by a.dept_name
-order by avg_salary;
+order by avg_salary desc;
 
 -- 문제10.
 -- 현재, 직책별 평균급여를 평균급여가 큰 직책 순서대로 직책명과 그 평균연봉을 출력 하세요.
@@ -77,4 +77,4 @@ select a.title, avg(b.salary) as avg_salary
 from titles a, salaries b
 where a.emp_no = b.emp_no and a.to_date = '9999-01-01' and b.to_date = '9999-01-01'
 group by a.title
-order by  avg_salary;
+order by  avg_salary desc;
