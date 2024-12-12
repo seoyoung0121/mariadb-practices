@@ -3,19 +3,25 @@ package example;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-public class InsertEx02 {
+public class SelectEx02 {
 	public static void main(String[] args) {
-		System.out.println(insert(new DepartmentVo("영업 1팀")));
-		System.out.println(insert(new DepartmentVo("영업 2팀")));
+		List<DepartmentVo> result = search("팀");
+		for(DepartmentVo vo: result) {
+			System.out.println(vo);
+		}
 	}
 
-	public static boolean insert(DepartmentVo vo) {
-		boolean result = false;
+	public static List<DepartmentVo> search(String keyword) {
+		List<DepartmentVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
 		try {
 			// 1. JDBC Driver 로딩
@@ -26,23 +32,32 @@ public class InsertEx02 {
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
 
 			// 3. Statement 준비하기
-			String sql = "insert into department values(null, ?)";
+			String sql = "select id, name from department where name like ?";
 			pstmt = conn.prepareStatement(sql);
 
 			// 4. Parameter Binding
-			pstmt.setString(1, vo.getName());
+			pstmt.setString(1, "%" + keyword + "%");
 
 			// 5. SQL 실행
-			int count = pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 
-			result = count == 1;
+			// 6. 결과 처리
+			while (rs.next()) {
+				Long id = rs.getLong(1);
+				String name = rs.getString(2);
 
+				DepartmentVo vo = new DepartmentVo(id, name);
+				result.add(vo);
+			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
+				if (rs != null) {
+					rs.close();
+				}
 				if (pstmt != null) {
 					pstmt.close();
 				}

@@ -6,13 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InsertEx02 {
+public class DeleteEx02 {
 	public static void main(String[] args) {
-		System.out.println(insert(new DepartmentVo("영업 1팀")));
-		System.out.println(insert(new DepartmentVo("영업 2팀")));
+		System.out.println(delete(4L));
 	}
 
-	public static boolean insert(DepartmentVo vo) {
+	public static boolean delete(Long id) {
 		boolean result = false;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -26,11 +25,11 @@ public class InsertEx02 {
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
 
 			// 3. Statement 준비하기
-			String sql = "insert into department values(null, ?)";
+			String sql = "delete from department where id = ?";
 			pstmt = conn.prepareStatement(sql);
 
 			// 4. Parameter Binding
-			pstmt.setString(1, vo.getName());
+			pstmt.setLong(1, id);
 
 			// 5. SQL 실행
 			int count = pstmt.executeUpdate();
