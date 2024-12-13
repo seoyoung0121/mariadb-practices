@@ -8,5 +8,6 @@
   <packaging>pom</packaging>
   <modules>
   <module>jdbc-practices</module>
+  <module>jdbc-practice</module>
   </modules>
 </project>
