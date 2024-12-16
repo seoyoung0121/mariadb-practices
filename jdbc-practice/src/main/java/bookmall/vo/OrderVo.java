@@ -1,11 +1,16 @@
 package bookmall.vo;
 
-import bookmall.type.StatusType;
-
 public class OrderVo {
-	private Long number;
+	private Long no;
+	public Long getNo() {
+		return no;
+	}
+	public void setNo(Long no) {
+		this.no = no;
+	}
+	private String number;
 	private Long userNo;
-	private StatusType status;
+	private String status;
 	private int payment;
 	private String shipping;
 	private String userName;
@@ -17,10 +22,10 @@ public class OrderVo {
 	public void setBooktitle(String booktitle) {
 		this.booktitle = booktitle;
 	}
-	public Long getNumber() {
+	public String getNumber() {
 		return number;
 	}
-	public void setNumber(Long number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 	public Long getUserNo() {
@@ -29,10 +34,10 @@ public class OrderVo {
 	public void setUserNo(Long userNo) {
 		this.userNo = userNo;
 	}
-	public StatusType getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(StatusType status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public int getPayment() {

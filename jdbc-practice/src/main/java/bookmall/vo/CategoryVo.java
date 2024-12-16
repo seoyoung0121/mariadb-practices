@@ -8,6 +8,11 @@ public class CategoryVo {
 		this.name=name;
 	}
 
+	public CategoryVo(Long no, String name) {
+		this.no = no;
+		this.name = name;
+	}
+
 	public Long getNo() {
 		return no;
 	}

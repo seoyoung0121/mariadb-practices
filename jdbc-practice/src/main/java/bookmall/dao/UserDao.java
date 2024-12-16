@@ -9,104 +9,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bookmall.vo.UserVo;
-import emaillist.vo.EmaillistVo;
 
 public class UserDao {
+
 	public void deleteByNo(Long no) {
-		Connection conn = null;
 
-		PreparedStatement pstmt = null;
-
-		try {
-			conn = getConnection();
-
-			String sql = "delete from user where no = ?";
-			pstmt = conn.prepareStatement(sql);
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement("delete from user where no = ?");) {
 
 			pstmt.setLong(1, no);
 
-			int count = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
+	public void insert(UserVo vo) {
 
-	public Boolean insert(UserVo vo) {
-		boolean result = false;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement pstmt1 = conn.prepareStatement("insert" + " into user " + "values(null, ?, ?, ?, ?)");
+				PreparedStatement pstmt2 = conn.prepareStatement("select last_insert_id() from dual");) {
 
-		try {
-			conn = getConnection();
+			pstmt1.setString(1, vo.getName());
+			pstmt1.setString(2, vo.getPhone());
+			pstmt1.setString(3, vo.getEmail());
+			pstmt1.setString(4, vo.getPassword());
 
-			String sql = "insert" + " into user " + "values(null, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
+			int count = pstmt1.executeUpdate();
 
-			pstmt.setString(1, vo.getName()); 
-			pstmt.setString(2, vo.getPhone());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
-			
-			int count = pstmt.executeUpdate();
+			boolean result = count == 1;
 
-			result = count == 1;
-			
-			if(result) {
-				sql = "select last_insert_id() from dual";
-				pstmt = conn.prepareStatement(sql);
-
-				rs = pstmt.executeQuery();
+			if (result) {
+				ResultSet rs = pstmt2.executeQuery();
 
 				if (rs.next()) {
-					 vo.setNo(rs.getLong(1));
+					vo.setNo(rs.getLong(1));
 				}
 			}
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
-		return result;
+
 	}
 
 	public List<UserVo> findAll() {
 		List<UserVo> result = new ArrayList<>();
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 
-		try {
-			conn = getConnection();
-
-			String sql = "select no, name, phone, email, password from user order by no desc";
-			pstmt = conn.prepareStatement(sql);
-
-			rs = pstmt.executeQuery();
+		try (Connection conn = DBConnection.getConnection();
+				PreparedStatement pstmt = conn
+						.prepareStatement("select no, name, phone, email, password from user order by no desc");) {
+			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				Long no = rs.getLong(1);
@@ -119,40 +74,13 @@ public class UserDao {
 				vo.setNo(no);
 				result.add(vo);
 			}
+			rs.close();
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return result;
 	}
 
-	private Connection getConnection() throws SQLException {
-		Connection conn = null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			String url = "jdbc:mariadb://192.168.0.18:3306/bookmall";
-			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		} catch (SQLException e) {
-			System.out.println("error:" + e);
-		}
-		return conn;
-	}
 
 }
