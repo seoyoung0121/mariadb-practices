@@ -32,7 +32,7 @@ public class CartDao {
 		List<CartVo> result = new ArrayList<>();
 		
 		try(Connection conn = DBConnection.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("select a.book_no, a.quantity, a.price, b.title from cart a, book b where a.book_no = b.no and user_no = ? order by book_no asc");
+				PreparedStatement pstmt = conn.prepareStatement("select a.book_no, a.quantity, a.price, b.title from cart a, book b where a.book_no = b.no and user_no = ?");
 				){
 				pstmt.setLong(1, no);
 				
